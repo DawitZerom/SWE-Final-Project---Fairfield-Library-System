@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      layout:decorate="~{layouts/master-layout}">
+<head>
+    <title>Library - Checkout</title>
+</head>
+<body>
+    <div layout:fragment="content" style="padding-top:1em;" class="container">
+      <span style="font-size: 2em;" class="primary-color">List of Checkouts</span>
+      <span style="float:right;">
+        <a class="btn btn-outline-success btn-lg" href="/library/secured/checkout/new">
+          <i class="fa-solid"></i> Check-out Book
+        </a>
+      </span>
+      <hr>
+  <main>
+    <section>
+      <form action="/library/secured/checkout/search" method="get">
+        <fieldset>
+          <legend>Search results for '[[${searchString}]]'</legend>
+          <label>
+            You may search by member number, name, book title, isbn, etc.
+          </label>
+          <div>
+            <input type="search" name="searchString" id="searchString" th:value="${searchString}" autofocus>
+            <button type="submit" class="btn btn-primary btn-sm">Search</button>
+          </div>
+        </fieldset>
+      </form>
+    </section>
+    <br>
+    <section>
+      <table class="table table-bordered table-striped table-hover">
+        <thead class="thead-light">
+          <tr>
+            <th>#</th>
+            <th>ISBN</th>
+            <th>Book Title</th>
+            <th>Member Number</th>
+            <th>Member Name</th>
+            <th>Contact</th>
+            <th>Checkout Date</th>
+            <th>Due Date</th>
+            <th>Checked-In?</th>
+            <th>*</th>
+            <th>*</th>
+            <th>*</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="checkoutRecord, counter : ${checkoutRecords}">
+            <th th:text="${counter.count}+${'.'}"></th>
+            <td th:text="${checkoutRecord.book.isbn}"></td>
+            <td th:text="${checkoutRecord.book.title}"></td>
+            <td th:text="${checkoutRecord.libraryMember.memberNumber}"></td>
+            <td>
+              <span th:text="${checkoutRecord.libraryMember.Firstname}"></span> <span th:text="${checkoutRecord.libraryMember.Lastname}"></span>
+            </td>
+            <td th:text="${checkoutRecord.libraryMember.phone}"></td>
+            <td th:text="${checkoutRecord.checkoutDate}"></td>
+            <td th:switch="${#temporals.format(checkoutRecord.dueDate, 'yyyy-MM-dd') lt #temporals.format(#temporals.createNow(), 'yyyy-MM-dd')}">
+              <span th:case="true" th:text="${checkoutRecord.dueDate}" style="color: red;"></span>
+              <span th:case="false" th:text="${checkoutRecord.dueDate}"></span>
+            </td>
+            <td th:text="${checkoutRecord.isCheckedIn}"></td>
+            <td><a th:href="@{'/library/secured/checkin/find/{checkoutRecordId}'(checkoutRecordId=${checkoutRecord.checkoutRecordId})}">Check-in</a></td>
+            <td><a th:href="@{'/library/secured/checkout/edit/{checkoutRecordId}'(checkoutRecordId=${checkoutRecord.checkoutRecordId})}">Edit</a></td>
+            <td><a th:href="@{'/library/secured/checkout/delete/{checkoutRecordId}'(checkoutRecordId=${checkoutRecord.checkoutRecordId})}">Delete</a></td>
+          </tr>
+          <tr th:if="${checkoutRecords.isEmpty()}">
+            <td colspan="11" th:align="center">No records found</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+    <section th:if="${checkoutRecords.totalPages>0}" style="margin-top: 1em;">
+      <table border="1" cellspacing="3" cellpadding="5">
+        <tbody>
+          <tr>
+            <th scope="row">Pages:</th>
+            <td th:each="pageCount : ${#numbers.sequence(1, checkoutRecords.totalPages)}">
+              <a th:if="${currentPageNo == pageCount-1}" th:href="@{/library/secured/checkout/search(searchString=${searchString}, pageNo=${pageCount-1})}"
+                th:text="${pageCount}" style="padding: 100%; background-color:lightcoral"></a>
+              <a th:if="${currentPageNo != pageCount-1}" th:href="@{/library/secured/checkout/search(searchString=${searchString}, pageNo=${pageCount-1})}"
+                th:text="${pageCount}"></a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+  </div>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      layout:decorate="~{layouts/master-layout}">
+<head>
+  <title>Library - Books</title>
+</head>
+<body>
+<div layout:fragment="content" style="padding-top:1em;" class="container">
+  <span style="font-size: 2em;" class="primary-color">List of Library Members</span>
+  <span style="float:right;">
+        <a class="btn btn-outline-success btn-lg" href="/library/secured/librarymember/new">
+          <i class="fa-solid"></i> Add New Member
+        </a>
+      </span>
+  <hr>
+  <main>
+    <section>
+      <form action="/library/secured/librarymember/search" method="get">
+        <fieldset>
+          <legend>Search results for '[[${searchString}]]'</legend>
+          <label>
+            You may search by name, phone, etc.
+          </label>
+          <div>
+            <input type="search" name="searchString" id="searchString" th:value="${searchString}" autofocus>
+            <button type="submit" class="btn btn-primary btn-sm">Search</button>
+          </div>
+        </fieldset>
+      </form>
+    </section>
+    <br>
+    <table class="table table-bordered table-striped table-hover">
+      <thead class="thead-light">
+      <tr>
+        <th>#</th>
+        <th>Member Number</th>
+        <th>Firstname</th>
+        <th>Lastname</th>
+        <th>Phone</th>
+        <th>Membership</th>
+        <th>*</th>
+        <th>*</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="libraryMember, counter : ${libraryMembers}">
+        <th th:text="${counter.count}+${'.'}"></th>
+        <td th:text="${libraryMember.memberNumber}"></td>
+        <td th:text="${libraryMember.Firstname}"></td>
+        <td th:text="${libraryMember.Lastname}"></td>
+        <td th:text="${libraryMember.Phone}"></td>
+        <td th:text="${libraryMember.libraryMemberType.name}"></td>
+        <td><a th:href="@{'/library/secured/librarymember/edit/{libraryMemberId}'(libraryMemberId=${libraryMember.libraryMemberId})}">Edit</a></td>
+        <td><a th:href="@{'/library/secured/librarymember/delete/{libraryMemberId}'(libraryMemberId=${libraryMember.libraryMemberId})}">Delete</a></td>
+      </tr>
+      <tr th:if="${libraryMembers.isEmpty()}">
+        <td colspan="8" th:align="center">No members found</td>
+      </tr>
+      </tbody>
+    </table>
+  </main>
+</div>
+</body>
+</html>

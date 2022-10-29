@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      layout:decorate="~{layouts/master-layout}">
+<head>
+    <title>Library - Checkin</title>
+</head>
+<body>
+    <div layout:fragment="content" style="padding-top:1em;" class="container">
+  <main>
+    <span style="font-size: 2em;" class="primary-color">Check-in Book</span>
+    <hr/>
+    <section>
+      <div >
+        <form method="post" action="/library/secured/checkin/checkinbook" th:object="${checkoutRecord}">
+          <fieldset>
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+            <legend>Checkout Record Info</legend>
+            <input name="checkoutRecordId" type="hidden" th:value="${checkoutRecord.checkoutRecordId}">
+            <div>
+              <span>ISBN</span> : <span th:text="${checkoutRecord.book.isbn}"></span>
+            </div>
+            <div>
+              <span>Book Title</span> : <span th:text="${checkoutRecord.book.title}"></span>
+            </div>
+            <div>
+              <span>Member Number</span> : <span th:text="${checkoutRecord.libraryMember.memberNumber}"></span>
+            </div>
+            <div>
+              <span>Member Name</span> : <span th:text="${checkoutRecord.libraryMember.Firstname}"></span> <span th:text="${checkoutRecord.libraryMember.Lastname}"></span>
+            </div>
+            <div>
+              <span>Contact</span> : <span th:text="${checkoutRecord.libraryMember.phone}"></span>
+            </div>
+            <div>
+              <span>Checked-out Date</span> : <span th:text="${checkoutRecord.checkoutDate}"></span>
+            </div>
+            <div>
+              <span>Due Date</span> : <span th:text="${checkoutRecord.dueDate}"></span>
+            </div>
+            <div>
+              <span>Checked-in?</span> : <span th:text="${checkoutRecord.isCheckedIn}"></span>
+            </div>
+          </fieldset>
+          <div style="margin-top: 1em;">
+            <a class="std-lnk-btn" href="/library/secured/checkout/list">Cancel</a>
+            <input class="std-btn" type="submit" value="Check-in">
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
+  </div>
+</body>
+</html>

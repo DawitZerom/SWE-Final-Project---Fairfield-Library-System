@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      layout:decorate="~{layouts/master-layout}">
+<head>
+  <title>Library - Books</title>
+</head>
+<body>
+<div layout:fragment="content" style="padding-top:1em;" class="container">
+  <main>
+    <span style="font-size: 2em;" class="primary-color">Edit Library Member</span>
+    <hr>
+    <div style="border: 1px solid;padding: 1em;">
+      <div>
+        Fields marked with asterisk (*) are required.
+      </div>
+      <br>
+      <form method="post" action="/library/secured/librarymember/update" th:object="${libraryMember}">
+        <fieldset>
+          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+          <input name="libraryMemberId" type="hidden" th:value="${libraryMember.libraryMemberId}">
+          <div>
+            <label>Member Number*</label>
+          </div>
+          <div>
+            <span th:if="${#fields.hasErrors('memberNumber')}" th:errors="*{memberNumber}" style="color:red;"></span>
+            <input name="memberNumber" type="text" th:value="${libraryMember.memberNumber}" autofocus>
+          </div>
+          <div>
+            <label>Firstname*</label>
+          </div>
+          <div>
+            <span th:if="${#fields.hasErrors('firstname')}" th:errors="*{firstname}" style="color:red;"></span>
+            <input name="firstname" type="text" th:value="${libraryMember.firstname}" autofocus>
+          </div>
+          <div>
+            <label>Lastname*</label>
+          </div>
+          <div>
+            <span th:if="${#fields.hasErrors('lastname')}" th:errors="*{lastname}" style="color:red;"></span>
+            <input name="lastname" type="text" th:value="${libraryMember.lastname}" autofocus>
+          </div>
+          <div>
+            <label>Phone*</label>
+          </div>
+          <div>
+            <span th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}" style="color:red;"></span>
+            <input name="phone" type="text" th:value="${libraryMember.phone}" autofocus>
+          </div>
+        </fieldset>
+        <fieldset>
+          <div>
+            <label>Member Types</label>
+          </div>
+          <label th:each="type : ${libraryMemberTypes}" style="padding-right: 4em;">
+            <input style="margin-right: .5em;"
+                   name="libraryMemberType" type="radio"
+                   th:value="${type.libraryMemberTypeId}" th:text="${#strings.capitalize(type.name)}"
+                   th:field="*{libraryMemberType}">
+          </label>
+        </fieldset>
+        <div style="margin-top: 1em;">
+          <a class="std-lnk-btn" href="/library/secured/librarymember/list">Cancel</a>
+          <input class="btn btn-primary btn-sm" type="reset" value="Reset">
+          <input class="btn btn-primary btn-sm" type="submit" value="Save Member">
+        </div>
+      </form>
+    </div>
+  </main>
+</div>
+</body>
+</html>

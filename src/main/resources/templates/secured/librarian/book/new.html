@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      layout:decorate="~{layouts/master-layout}">
+<head>
+  <title>Library - Books</title>
+</head>
+<body>
+<div layout:fragment="content" style="padding-top:1em;" class="container">
+
+  <main>
+    <span style="font-size: 2em;" class="primary-color">Add New Book</span>
+    <hr/>
+    <div style="border: 1px solid;padding: 1em;">
+      <div>
+        Fields marked with asterisk (*) are required.
+      </div>
+      <br>
+      <form method="post" action="/library/secured/book/new" th:object="${book}">
+        <fieldset>
+          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+          <div>
+            <label>Title*</label>
+          </div>
+          <div>
+            <span th:if="${#fields.hasErrors('title')}" th:errors="*{title}" style="color:red;"></span>
+            <input name="title" type="text" th:value="${book.title}" autofocus>
+          </div>
+          <div>
+            <label>ISBN*</label>
+          </div>
+          <div>
+            <span th:if="${#fields.hasErrors('isbn')}" th:errors="*{isbn}" style="color:red;"></span>
+            <input name="isbn" type="text" th:value="${book.isbn}" autofocus>
+          </div>
+          <div>
+            <label>Author*</label>
+          </div>
+          <div>
+            <span th:if="${#fields.hasErrors('author')}" th:errors="*{author}" style="color:red;"></span>
+            <input name="author" type="text" th:value="${book.author}" autofocus>
+          </div>
+          <div>
+            <label>Publisher</label>
+          </div>
+          <div>
+            <span th:if="${#fields.hasErrors('publisher')}" th:errors="*{publisher}" style="color:red;"></span>
+            <input name="publisher" type="text" th:value="${book.publisher}" autofocus>
+          </div>
+          <div>
+            <label>Location</label>
+          </div>
+          <div>
+            <span th:if="${#fields.hasErrors('location')}" th:errors="*{location}" style="color:red;"></span>
+            <input name="location" type="text" th:value="${book.location}" autofocus>
+          </div>
+          <div>
+            <label>Total Copy</label>
+          </div>
+          <div>
+            <span th:if="${#fields.hasErrors('totalCopy')}" th:errors="*{totalCopy}" style="color:red;"></span>
+            <input name="totalCopy" type="number" th:value="${book.totalCopy}" autofocus>
+          </div>
+        </fieldset>
+        <div style="margin-top: 1em;">
+          <a class="std-lnk-btn" href="/library/secured/book/list">Cancel</a>
+          <input class="btn btn-primary" type="reset" value="Reset">
+          <input class="btn btn-primary" type="submit" value="Add Book">
+        </div>
+      </form>
+    </div>
+  </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      layout:decorate="~{layouts/master-layout}">
+<head>
+    <title>Library - General Exception</title>
+</head>
+<body>
+    <div layout:fragment="content" style="padding-top:1em;" class="container">
+        <h1>Sorry!</h1>
+        <hr/>
+        <main>
+            <div th:if="${errorMap.errorMessage}">
+                <h4 th:text="${errorMap.errorMessage}" style="color:red;"></h4>
+            </div>
+            <button onclick="history.back()">Go Back</button>
+        </main>
+        </div>
+    </body>
+</html>

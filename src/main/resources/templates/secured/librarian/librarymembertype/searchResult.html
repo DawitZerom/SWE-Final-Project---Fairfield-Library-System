@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      layout:decorate="~{layouts/master-layout}">
+<head>
+  <title>Library - Membership Type</title>
+</head>
+<body>
+<div layout:fragment="content" style="padding-top:1em;" class="container">
+  <main>
+    <span style="font-size: 2em;" class="primary-color">List of Membership Types</span>
+    <span style="float:right;">
+        <a class="btn btn-outline-success btn-lg" href="/library/secured/librarymembertype/new">
+          <i class="fa-solid"></i> Add New Membership Type
+        </a>
+      </span>
+    <hr>
+    <section>
+      <form action="/library/secured/librarymembertype/search" method="get">
+        <fieldset>
+          <legend>Search results for '[[${searchString}]]'</legend>
+          <label>
+            You may search by name.
+          </label>
+          <div>
+            <input type="search" name="searchString" id="searchString" th:value="${searchString}" autofocus>
+            <button type="submit" class="btn btn-primary btn-sm">Search</button>
+          </div>
+        </fieldset>
+      </form>
+    </section>
+    <br>
+    <section>
+      <table class="table table-bordered table-striped table-hover">
+        <thead class="thead-light">
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Max Length Borrow</th>
+          <th>Overdue Fee</th>
+          <th>*</th>
+          <th>*</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="libraryMemberType, counter : ${libraryMemberTypes}">
+          <th th:text="${counter.count}+${'.'}"></th>
+          <td th:text="${libraryMemberType.name}"></td>
+          <td>
+            <span th:text="${libraryMemberType.maxLengthBorrowBook}"></span> day(s)
+          </td>
+          <td>
+            $ <span th:text="${libraryMemberType.overdueFee}"></span>
+          </td>
+          <td><a th:href="@{'/library/secured/librarymembertype/edit/{libraryMemberTypeId}'(libraryMemberTypeId=${libraryMemberType.libraryMemberTypeId})}">Edit</a></td>
+          <td><a th:href="@{'/library/secured/librarymembertype/delete/{libraryMemberTypeId}'(libraryMemberTypeId=${libraryMemberType.libraryMemberTypeId})}">Delete</a></td>
+        </tr>
+        <tr th:if="${libraryMemberTypes.isEmpty()}">
+          <td colspan="6" th:align="center">No membership types found</td>
+        </tr>
+        </tbody>
+      </table>
+    </section>
+
+  </main>
+</div>
+</body>
+</html>

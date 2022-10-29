@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      layout:decorate="~{layouts/master-layout}">
+<head>
+    <title>Library - Checkin</title>
+</head>
+<body>
+    <div layout:fragment="content" style="padding-top:1em;" class="container">
+    <span style="font-size: 2em;" class="primary-color">Edit Checkin Record</span>
+    <hr>
+  <main>
+    <section>
+      <div >
+        <form method="post" action="/library/secured/checkin/update" th:object="${checkoutRecord}">
+          <fieldset>
+            <legend>Editable data</legend>
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+            <input name="checkoutRecordId" type="hidden" th:value="${checkoutRecord.checkoutRecordId}">
+            <div>
+                <span>Checked-In?</span> : 
+                <input type="radio" name="isCheckedIn" value="Yes" th:checked="${checkoutRecord.isCheckedIn=='Yes'} or ${checkoutRecord.isCheckedIn=='yes'}">
+                <label for="isCheckedInYes">Yes</label>          
+                <input type="radio" name="isCheckedIn" value="No" th:checked="${checkoutRecord.isCheckedIn=='No'} or ${checkoutRecord.isCheckedIn=='no'}">
+                <label for="isCheckedInNo">No</label>
+            </div>
+            <hr>
+            <h3>Check-in Record Info</h3>
+            <div>
+              <span>ISBN</span> : <span th:text="${checkoutRecord.book.isbn}"></span>
+            </div>
+            <div>
+              <span>Book Title</span> : <span th:text="${checkoutRecord.book.title}"></span>
+            </div>
+            <div>
+              <span>Member Number</span> : <span th:text="${checkoutRecord.libraryMember.memberNumber}"></span>
+            </div>
+            <div>
+              <span>Member Name</span> : <span th:text="${checkoutRecord.libraryMember.Firstname}"></span> <span th:text="${checkoutRecord.libraryMember.Lastname}"></span>
+            </div>
+            <div>
+              <span>Contact</span> : <span th:text="${checkoutRecord.libraryMember.phone}"></span>
+            </div>
+            <div>
+              <span>Checked-out Date</span> : <span th:text="${checkoutRecord.checkoutDate}"></span>
+            </div>
+            <div>
+              <span>Due Date</span> : <span th:text="${checkoutRecord.dueDate}"></span>
+            </div>
+            <div>
+              <span>Checked-in?</span> : <span th:text="${checkoutRecord.isCheckedIn}"></span>
+            </div>
+            <div>
+                <span>Checked-in Date</span> : <span th:text="${checkoutRecord.dueDate}"></span>
+            </div>
+            <div>
+                <span>Overdue Fee</span> : $ <span th:text="${checkoutRecord.overdueFee}"></span>
+            </div>
+          </fieldset>
+          <div style="margin-top: 1em;">
+            <a class="std-lnk-btn" href="/library/secured/checkin/list">Cancel</a>
+            <input class="std-btn" type="reset" value="Reset">
+            <input class="std-btn" type="submit" value="Save Check-in">
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
+  </div>
+</body>
+</html>

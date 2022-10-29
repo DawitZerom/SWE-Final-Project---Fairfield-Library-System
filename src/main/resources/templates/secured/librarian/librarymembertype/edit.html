@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      layout:decorate="~{layouts/master-layout}">
+<head>
+    <title>Library - Membership Type</title>
+</head>
+<body>
+<div layout:fragment="content" style="padding-top:1em;" class="container">
+    <main>
+        <span style="font-size: 2em;" class="primary-color">Edit Membership Type</span>
+        <hr/>
+        <div style="border: 1px solid;padding: 1em;">
+            <div>
+                Fields marked with asterisk (*) are required.
+            </div>
+            <br>
+            <form method="post" action="/library/secured/librarymembertype/new" th:object="${libraryMemberType}">
+                <fieldset>
+                    <input name="libraryMemberTypeId" type="hidden" th:value="${libraryMemberType.libraryMemberTypeId}">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                    <div>
+                        <label>Name*</label>
+                    </div>
+                    <div>
+                        <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" style="color:red;"></span>
+                        <input name="name" type="text" th:value="${libraryMemberType.name}" autofocus required>
+                    </div>
+                    <div>
+                        <label>Max Length Borrow*</label>
+                    </div>
+                    <div>
+                        <span th:if="${#fields.hasErrors('maxLengthBorrowBook')}" th:errors="*{maxLengthBorrowBook}" style="color:red;"></span>
+                        <input name="maxLengthBorrowBook" type="text" th:value="${libraryMemberType.maxLengthBorrowBook}" autofocus required>
+                    </div>
+                    <div>
+                        <label>Overdue Fee*</label>
+                    </div>
+                    <div>
+                        <span th:if="${#fields.hasErrors('overdueFee')}" th:errors="*{overdueFee}" style="color:red;"></span>
+                        <input name="overdueFee" type="number" step="any" th:value="${libraryMemberType.overdueFee}" autofocus required>
+                    </div>
+                </fieldset>
+                <div style="margin-top: 1em;">
+                    <a class="std-lnk-btn" href="/library/secured/librarymembertype/list">Cancel</a>
+                    <input class="std-btn" type="reset" value="Reset">
+                    <input class="std-btn" type="submit" value="Save Membership Type">
+                </div>
+            </form>
+        </div>
+    </main>
+</body>
+</html>

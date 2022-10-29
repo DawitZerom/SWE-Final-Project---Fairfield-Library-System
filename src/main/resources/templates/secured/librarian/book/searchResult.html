@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      layout:decorate="~{layouts/master-layout}">
+<head>
+  <title>Library - Books</title>
+</head>
+<body>
+<div layout:fragment="content" style="padding-top:1em;" class="container">
+
+  <main>
+    <span style="font-size: 2em;" class="primary-color">List of Books</span>
+    <span sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_LIBRARIAN')" style="float:right;">
+      <a class="btn btn-outline-success btn-lg" href="/library/secured/book/new">
+        <i class="fa-solid"></i> Add New Book
+      </a>
+    </span>
+    <hr/>
+    <section>
+      <form action="/library/secured/book/search" method="get">
+        <fieldset>
+          <legend>Search results for '[[${searchString}]]'</legend>
+          <label>
+            You may search by title, isbn, etc.
+          </label>
+          <div>
+            <input type="search" name="searchString" id="searchString" th:value="${searchString}" autofocus>
+            <button type="submit" class="btn btn-primary btn-sm">Search</button>
+          </div>
+        </fieldset>
+      </form>
+    </section>
+    <br>
+    <section>
+      <table class="table table-bordered table-striped table-hover">
+        <thead class="thead-light">
+        <tr>
+          <th>#</th>
+          <th>Title</th>
+          <th>ISBN</th>
+          <th>Author</th>
+          <th>Publisher</th>
+          <th>Location</th>
+          <th>Total Copy</th>
+          <th>Available Copy</th>
+          <th sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_LIBRARIAN')">*</th>
+          <th sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_LIBRARIAN')">*</th>
+          <th sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_LIBRARIAN')">*</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="book, counter : ${books}">
+          <th th:text="${counter.count}+${'.'}"></th>
+          <td th:text="${book.title}"></td>
+          <td th:text="${book.isbn}"></td>
+          <td th:text="${book.author}"></td>
+          <td th:text="${book.publisher}"></td>
+          <td th:text="${book.location}"></td>
+          <td th:text="${book.totalCopy}"></td>
+          <td th:text="${book.availableCopy}"></td>
+          <td sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_LIBRARIAN')" th:if="${book.availableCopy} > 0">
+            <a th:href="@{'/library/secured/checkout/new/book/{bookId}'(bookId=${book.bookId})}">Checkout</a>
+          </td>
+          <td sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_LIBRARIAN')" th:unless="${book.availableCopy} > 0">
+            <span style="color: grey;">Checkout</span>
+          </td>
+          <td sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_LIBRARIAN')"><a th:href="@{'/library/secured/book/edit/{bookId}'(bookId=${book.bookId})}">Edit</a></td>
+          <td sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_LIBRARIAN')"><a th:href="@{'/library/secured/book/delete/{bookId}'(bookId=${book.bookId})}">Delete</a></td>
+        </tr>
+        <tr th:if="${books.isEmpty()}">
+          <td colspan="11" th:align="center">No books found</td>
+        </tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+</div>
+</body>
+</html>

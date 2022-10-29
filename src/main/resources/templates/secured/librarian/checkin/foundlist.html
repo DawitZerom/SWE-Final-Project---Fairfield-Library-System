@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      layout:decorate="~{layouts/master-layout}">
+<head>
+    <title>Library - Checkin</title>
+</head>
+<body>
+    <div layout:fragment="content" style="padding-top:1em;" class="container">
+    <span style="font-size: 2em;" class="primary-color">Check-in Book</span>
+    <hr>
+  <main>
+    <section>
+      <form action="/library/secured/checkin/searchbyisbn" method="get">
+        <fieldset>
+          <legend>Search for Checkout Record to Check-in</legend>
+          <label>
+            You may search by book isbn
+          </label>
+          <div>
+            <input type="search" name="isbn" placeholder="ISBN" id="isbn" th:value="${isbn}" autofocus required>
+            <button type="submit" class="btn btn-primary btn-sm">Search</button>
+          </div>
+        </fieldset>
+      </form>
+    </section>
+    <br>
+    
+    <section>
+      <h5>List of Checkout Records to Check-in</h5>
+      <table class="table table-bordered table-striped table-hover">
+        <thead class="thead-light">
+          <tr>
+            <th>#</th>
+            <th>ISBN</th>
+            <th>Book Title</th>
+            <th>Member Number</th>
+            <th>Member Name</th>
+            <th>Contact</th>
+            <th>Checkout Date</th>
+            <th>Due Date</th>
+            <th>Checked-In?</th>
+            <th>*</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="checkoutRecord, counter : ${checkoutRecords}">
+            <th th:text="${counter.count}+${'.'}"></th>
+            <td th:text="${checkoutRecord.book.isbn}"></td>
+            <td th:text="${checkoutRecord.book.title}"></td>
+            <td th:text="${checkoutRecord.libraryMember.memberNumber}"></td>
+            <td>
+              <span th:text="${checkoutRecord.libraryMember.Firstname}"></span> <span th:text="${checkoutRecord.libraryMember.Lastname}"></span>
+            </td>
+            <td th:text="${checkoutRecord.libraryMember.phone}"></td>
+            <td th:text="${checkoutRecord.checkoutDate}"></td>
+            <td th:switch="${#temporals.format(checkoutRecord.dueDate, 'yyyy-MM-dd') lt #temporals.format(#temporals.createNow(), 'yyyy-MM-dd')}">
+              <span th:case="true" th:text="${checkoutRecord.dueDate}" style="color: red;"></span>
+              <span th:case="false" th:text="${checkoutRecord.dueDate}"></span>
+            </td>
+            <td th:text="${checkoutRecord.isCheckedIn}"></td>
+            <td><a th:href="@{'/library/secured/checkin/find/{checkoutRecordId}'(checkoutRecordId=${checkoutRecord.checkoutRecordId})}">Check-in</a></td>
+          </tr>
+          <tr th:if="${checkoutRecords.isEmpty()}">
+            <td colspan="9" th:align="center">No records found</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+  </div>
+</body>
+</html>
